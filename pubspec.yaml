@@ -22,8 +22,17 @@ dependencies:
   cached_network_image: ^1.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.0"
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  ios: false
+  android: true
+  image_path_ios: "assets/easy-reader-web.png"
+  image_path_android: "assets/easy-reader-web.png"
+  adaptive_icon_background: "assets/easy-reader-web.png"
+  adaptive_icon_foreground: "assets/easy-reader-web.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -40,6 +49,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - google-login.jpg
+    - easy-reader-web.png
+    - easy-reader-login.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

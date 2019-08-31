@@ -13,6 +13,7 @@ A App to unzip manga archive and show images sorted to user.
 # Futures features
   - Read .rar files(actually native library of dart dont support .rar decode)
   - Read CBZ files(actually native library of dart dont support .CBZ decode)
+  - Add chat
   
 # Extra information
 This URL can be insert inside app to download direct the zip file: 

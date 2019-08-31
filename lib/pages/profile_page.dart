@@ -278,17 +278,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // Button
                 Container(
-                  child: FlatButton(
+                  child:  RaisedButton(
+                    child: Text('Update',
+                        style: new TextStyle(fontSize: 20.0, color: Colors.white)), color: Colors.blue,
                     onPressed: handleUpdateData,
-                    child: Text(
-                      'UPDATE',
-                      style: TextStyle(fontSize: 16.0),
-                    ),
-                    color: Colors.blue,
-                    highlightColor: new Color(0xff8d93a0),
-                    splashColor: Colors.transparent,
-                    textColor: Colors.white,
-                    padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 10.0),
+                    shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
                   ),
                   margin: EdgeInsets.only(top: 50.0, bottom: 50.0),
                 ),

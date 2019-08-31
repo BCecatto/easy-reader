@@ -234,17 +234,9 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       tag: 'hero',
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          radius: 48.0,
-          child: Text('Easy Reader',
-              style: TextStyle(
-                fontSize: 23.0,
-                color: Colors.blue,
-                height: 1.0,
-                fontWeight: FontWeight.w600
-              )
-          ),
+        child: Image.asset(
+          'assets/easy-reader-login.png',
+          height: 200.0,
         ),
       ),
     );
@@ -252,7 +244,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
 
   Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
