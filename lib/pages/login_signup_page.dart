@@ -58,10 +58,11 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           _isLoading = false;
         });
 
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+        if (userId.length > 0 &&
+            userId != null &&
+            _formMode == FormMode.LOGIN) {
           widget.onSignedIn();
         }
-
       } catch (e) {
         print('Error: $e');
         setState(() {
@@ -112,11 +113,14 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         ));
   }
 
-  Widget _showCircularProgress(){
+  Widget _showCircularProgress() {
     if (_isLoading) {
       return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
-
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
   }
 
   void _showVerifyEmailSentDialog() {
@@ -126,7 +130,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Verify your account"),
-          content: new Text("Link to verify account has been sent to your email"),
+          content:
+              new Text("Link to verify account has been sent to your email"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("Dismiss"),
@@ -146,8 +151,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     setState(() {
       _isLoading = true;
     });
-    userId  = await widget.auth.signInWithGoogle();
-    if(userId != null) {
+    userId = await widget.auth.signInWithGoogle();
+    if (userId != null) {
       setState(() {
         _isLoading = false;
       });
@@ -162,12 +167,13 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
     }
   }
 
-  Widget _loginWithGoogle(){
+  Widget _loginWithGoogle() {
     return new Container(
       margin: const EdgeInsets.only(top: 10.0),
       child: RaisedButton(
         elevation: 5.0,
-        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+        shape: new RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30.0)),
         onPressed: () async => await _loginUserGoogle(),
         color: const Color(0xFFFFFFFF),
         child: new Row(
@@ -178,21 +184,19 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               height: 40.0,
             ),
             new Container(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              child: new Text(
-                "Sign in with Google",
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold),
-              )
-            ),
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                child: new Text(
+                  "Sign in with Google",
+                  style: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.bold),
+                )),
           ],
         ),
       ),
     );
   }
 
-  Widget _showBody(){
+  Widget _showBody() {
     return new Container(
         padding: EdgeInsets.all(16.0),
         child: new Form(
@@ -203,7 +207,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
               _showLogo(),
               _showEmailInput(),
               _showPasswordInput(),
-              if(_formMode == FormMode.LOGIN) _loginWithGoogle(),
+              if (_formMode == FormMode.LOGIN) _loginWithGoogle(),
               _showPrimaryButton(),
               _showSecondaryButton(),
               _showErrorMessage(),
@@ -301,7 +305,8 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
           height: 40.0,
           child: new RaisedButton(
             elevation: 5.0,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
             color: Colors.blue,
             child: _formMode == FormMode.LOGIN
                 ? new Text('Login',

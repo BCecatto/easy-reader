@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:archive/archive.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -78,8 +77,8 @@ class _HomePageState extends State<HomePage> {
               color: Colors.red,
               height: 1.0,
               fontWeight: FontWeight.w300),
-          ),
-        );
+        ),
+      );
     } else {
       return new Container(
         height: 0.0,
@@ -88,7 +87,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<File> _downloadFile(String _path, String url, String fileName) async {
-    if(_path.isNotEmpty) {
+    if (_path.isNotEmpty) {
       var file = File('$_path');
       return file;
     } else {
@@ -107,7 +106,8 @@ class _HomePageState extends State<HomePage> {
         _images.clear();
         _tempImages.clear();
 
-        var zippedFile = await _downloadFile(_path, _zipPath, _localZipFileName);
+        var zippedFile =
+            await _downloadFile(_path, _zipPath, _localZipFileName);
         await unarchiveAndSave(zippedFile);
 
         setState(() {
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
           _images.sort();
           _downloading = false;
         });
-      } catch(e) {
+      } catch (e) {
         print('Error: $e');
         setState(() {
           _downloading = false;
@@ -140,12 +140,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _showCircularProgress(){
+  Widget _showCircularProgress() {
     if (_downloading) {
       return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
   }
-
 
   Widget buildList() {
     return Expanded(
@@ -158,9 +161,7 @@ class _HomePageState extends State<HomePage> {
                   child: Image.file(
                     File(_images[index]),
                     fit: BoxFit.fitWidth,
-                  )
-              )
-          );
+                  )));
         },
       ),
     );
@@ -212,7 +213,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: new Text("Verify your account"),
           content:
-          new Text("Link to verify account has been sent to your email"),
+              new Text("Link to verify account has been sent to your email"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("Dismiss"),
@@ -228,7 +229,8 @@ class _HomePageState extends State<HomePage> {
 
   _signOut() async {
     try {
-      Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+      Navigator.popUntil(
+          context, ModalRoute.withName(Navigator.defaultRouteName));
       await widget.auth.signOut();
       widget.onSignedOut();
     } catch (e) {
@@ -273,39 +275,31 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             currentAccountPicture: new StreamBuilder(
-              stream: Firestore.instance.collection('users').document(widget.userId).snapshots(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.hasData) {
-                  return new CachedNetworkImage(
-                      placeholder: (context, url) => Container(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      ),
-                      width: 90.0,
-                      height: 90.0,
-                      padding: EdgeInsets.all(20.0),
-                      ),
-                    imageUrl: _imageUrl(snapshot.data),
-                    width: 90.0,
-                    height: 90.0,
-                    fit: BoxFit.cover
-                  );
-                } else {
-                  return new Container(width: 0.0, height: 0.0);
-                }
-              }
-            ),
+                stream: Firestore.instance
+                    .collection('users')
+                    .document(widget.userId)
+                    .snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    return Image.network(
+                        _imageUrl(snapshot.data),
+                        width: 90.0,
+                        height: 90.0,
+                        fit: BoxFit.cover);
+                  } else {
+                    return new Container(width: 0.0, height: 0.0);
+                  }
+                }),
           ),
           ListTile(
             title: new Text('Perfil'),
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                  new ProfilePage(auth: widget.auth)));
+                  context,
+                  new MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          new ProfilePage(auth: widget.auth)));
             },
           ),
           ListTile(
@@ -313,16 +307,12 @@ class _HomePageState extends State<HomePage> {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.push(
-                context,
-                new MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                  new HomePage(
-                    auth: widget.auth,
-                    userId: widget.userId,
-                    onSignedOut: widget.onSignedOut
-                   )
-                 )
-              );
+                  context,
+                  new MaterialPageRoute(
+                      builder: (BuildContext context) => new HomePage(
+                          auth: widget.auth,
+                          userId: widget.userId,
+                          onSignedOut: widget.onSignedOut)));
             },
           ),
         ],
@@ -336,44 +326,45 @@ class _HomePageState extends State<HomePage> {
       child: SizedBox(
         height: 40.0,
         child: new RaisedButton(
-          elevation: 5.0,
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          color: Colors.blue,
-          child: new Text('Process information...',
-            style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-          onPressed: () { FutureBuilder(
-            future: _downloadZip(),
-            builder: (context, snapshot){
-              return AlertDialog(
-                title: new Text("Finished Download"),
-                content: new Text("Now you can see your manga"),
-                actions: <Widget>[
-                  new FlatButton(
-                    child: new Text("Dismiss"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            }
-          );}
-        ),
+            elevation: 5.0,
+            shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.blue,
+            child: new Text('Process information...',
+                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+            onPressed: () {
+              FutureBuilder(
+                  future: _downloadZip(),
+                  builder: (context, snapshot) {
+                    return AlertDialog(
+                      title: new Text("Finished Download"),
+                      content: new Text("Now you can see your manga"),
+                      actions: <Widget>[
+                        new FlatButton(
+                          child: new Text("Dismiss"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
+            }),
       ),
     );
   }
 
   void _openFileExplorer() async {
-      try {
-        _path = await FilePicker.getFilePath();
-      } catch (e) {
-          print("Unsupported operation" + e.toString());
-      }
-      if (!mounted) return;
+    try {
+      _path = await FilePicker.getFilePath();
+    } catch (e) {
+      print("Unsupported operation" + e.toString());
+    }
+    if (!mounted) return;
 
-      setState(() {
-        _fileName = _path.split('/').last;
-      });
+    setState(() {
+      _fileName = _path.split('/').last;
+    });
   }
 
   Widget _selectPicker() {
@@ -383,11 +374,12 @@ class _HomePageState extends State<HomePage> {
         height: 40.0,
         child: new RaisedButton(
           elevation: 5.0,
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          shape: new RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0)),
           color: Colors.blue,
           onPressed: () => _openFileExplorer(),
           child: new Text('Select a ZIP file',
-            style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+              style: new TextStyle(fontSize: 20.0, color: Colors.white)),
         ),
       ),
     );
@@ -401,18 +393,22 @@ class _HomePageState extends State<HomePage> {
           child: new ListView(
             shrinkWrap: true,
             children: <Widget>[
-              if(_showSelect()) _showUrlInput(),
-              if(_showSelect()) new Center(child: Text('OR')),
-              _showSelect() ? _selectPicker() : new Center(child: Text(_fileName,
-                style: TextStyle(fontSize: 17.0, color: Colors.blue))),
+              if (_showSelect()) _showUrlInput(),
+              if (_showSelect()) new Center(child: Text('OR')),
+              _showSelect()
+                  ? _selectPicker()
+                  : new Center(
+                      child: Text(_fileName,
+                          style:
+                              TextStyle(fontSize: 17.0, color: Colors.blue))),
               _buildButton()
             ],
           ),
         ));
   }
 
-  bool _showSelect(){
-    if(_fileName.isNotEmpty || _zipPath.isNotEmpty) {
+  bool _showSelect() {
+    if (_fileName.isNotEmpty || _zipPath.isNotEmpty) {
       return false;
     } else {
       return true;
@@ -422,26 +418,26 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      resizeToAvoidBottomPadding: false,
-      appBar: new AppBar(
-        title: new Text('Home'),
-        actions: <Widget>[
-          new FlatButton(
-            child: new Text('Logout',
-              style: new TextStyle(fontSize: 17.0, color: Colors.white)),
-             onPressed: _signOut
-          )
-        ],
-      ),
-      drawer: _drawerMenu(),
-      body: _downloading ? _showCircularProgress() : Container(
-        child: Column(
-          children: <Widget>[
-            _images.isNotEmpty ? buildList() : _showBody(),
-            _showErrorMessage()
+        resizeToAvoidBottomPadding: false,
+        appBar: new AppBar(
+          title: new Text('Home'),
+          actions: <Widget>[
+            new FlatButton(
+                child: new Text('Logout',
+                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
+                onPressed: _signOut)
           ],
         ),
-      )
-    );
+        drawer: _drawerMenu(),
+        body: _downloading
+            ? _showCircularProgress()
+            : Container(
+                child: Column(
+                  children: <Widget>[
+                    _images.isNotEmpty ? buildList() : _showBody(),
+                    _showErrorMessage()
+                  ],
+                ),
+              ));
   }
 }

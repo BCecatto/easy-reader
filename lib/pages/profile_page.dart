@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_demo/services/authentication.dart';
@@ -83,10 +82,11 @@ class _ProfilePageState extends State<ProfilePage> {
         storageTaskSnapshot = value;
         storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
           photoUrl = downloadUrl;
-          Firestore.instance
-              .collection('users')
-              .document(id)
-              .setData({'nickname': nickname, 'aboutMe': aboutMe, 'photoUrl': photoUrl}).then((data) async {
+          Firestore.instance.collection('users').document(id).setData({
+            'nickname': nickname,
+            'aboutMe': aboutMe,
+            'photoUrl': photoUrl
+          }).then((data) async {
             await prefs.setString('photoUrl', photoUrl);
             setState(() {
               isLoading = false;
@@ -121,10 +121,11 @@ class _ProfilePageState extends State<ProfilePage> {
       isLoading = true;
     });
 
-    Firestore.instance
-        .collection('users')
-        .document(id)
-        .updateData({'nickname': nickname, 'aboutMe': aboutMe, 'photoUrl': photoUrl}).then((data) async {
+    Firestore.instance.collection('users').document(id).updateData({
+      'nickname': nickname,
+      'aboutMe': aboutMe,
+      'photoUrl': photoUrl
+    }).then((data) async {
       await prefs.setString('nickname', nickname);
       await prefs.setString('aboutMe', aboutMe);
       await prefs.setString('photoUrl', photoUrl);
@@ -132,7 +133,6 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         isLoading = false;
       });
-
     }).catchError((err) {
       setState(() {
         isLoading = false;
@@ -151,8 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
             }),
         title: Text('Edit Profile'),
       ),
-      body:
-      Stack(
+      body: Stack(
         children: <Widget>[
           SingleChildScrollView(
             child: Column(
@@ -164,40 +163,33 @@ class _ProfilePageState extends State<ProfilePage> {
                       children: <Widget>[
                         (avatarImageFile == null)
                             ? (photoUrl != ''
-                            ? Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                              ),
-                              width: 90.0,
-                              height: 90.0,
-                              padding: EdgeInsets.all(20.0),
-                            ),
-                            imageUrl: photoUrl,
-                            width: 90.0,
-                            height: 90.0,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(45.0)),
-                          clipBehavior: Clip.hardEdge,
-                        )
-                            : Icon(
-                          Icons.account_circle,
-                          size: 90.0,
-                          color: Colors.grey,
-                        ))
+                                ? Material(
+                                    child: Image.network(
+                                      photoUrl,
+                                      width: 90.0,
+                                      height: 90.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(45.0)),
+                                    clipBehavior: Clip.hardEdge,
+                                  )
+                                : Icon(
+                                    Icons.account_circle,
+                                    size: 90.0,
+                                    color: Colors.grey,
+                                  ))
                             : Material(
-                          child: Image.file(
-                            avatarImageFile,
-                            width: 90.0,
-                            height: 90.0,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(45.0)),
-                          clipBehavior: Clip.hardEdge,
-                        ),
+                                child: Image.file(
+                                  avatarImageFile,
+                                  width: 90.0,
+                                  height: 90.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(45.0)),
+                                clipBehavior: Clip.hardEdge,
+                              ),
                         IconButton(
                           icon: Icon(
                             Icons.camera_alt,
@@ -223,13 +215,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       child: Text(
                         'Nickname',
-                        style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, color: Colors.grey),
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey),
                       ),
-                      margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
+                      margin:
+                          EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
                     ),
                     Container(
                       child: Theme(
-                        data: Theme.of(context).copyWith(primaryColor: Colors.blue),
+                        data: Theme.of(context)
+                            .copyWith(primaryColor: Colors.blue),
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'How other people call you?',
@@ -250,13 +247,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     Container(
                       child: Text(
                         'About me',
-                        style: TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, color: Colors.blue),
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue),
                       ),
-                      margin: EdgeInsets.only(left: 10.0, top: 30.0, bottom: 5.0),
+                      margin:
+                          EdgeInsets.only(left: 10.0, top: 30.0, bottom: 5.0),
                     ),
                     Container(
                       child: Theme(
-                        data: Theme.of(context).copyWith(primaryColor: Colors.blue),
+                        data: Theme.of(context)
+                            .copyWith(primaryColor: Colors.blue),
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Fun, like travel and play PES...',
@@ -278,12 +280,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 // Button
                 Container(
-                  child:  RaisedButton(
-                    child: Text('Update',
-                        style: new TextStyle(fontSize: 20.0, color: Colors.white)), color: Colors.blue,
-                    onPressed: handleUpdateData,
-                    shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
-                  ),
+                  child: RaisedButton(
+                      child: Text('Update',
+                          style: new TextStyle(
+                              fontSize: 20.0, color: Colors.white)),
+                      color: Colors.blue,
+                      onPressed: handleUpdateData,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0))),
                   margin: EdgeInsets.only(top: 50.0, bottom: 50.0),
                 ),
               ],
@@ -295,11 +299,13 @@ class _ProfilePageState extends State<ProfilePage> {
           Positioned(
             child: isLoading
                 ? Container(
-              child: Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)),
-              ),
-              color: Colors.white.withOpacity(0.8),
-            )
+                    child: Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue)),
+                    ),
+                    color: Colors.white.withOpacity(0.8),
+                  )
                 : Container(),
           ),
         ],

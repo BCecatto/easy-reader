@@ -19,7 +19,6 @@ dependencies:
   firebase_storage: ^1.0.4
   image_picker: ^0.5.3+1
   shared_preferences: 0.4.3
-  cached_network_image: ^1.0.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.0"
